@@ -1,0 +1,40 @@
+{
+    "name": "Spotify Playlist Tool",
+    "version": "1.0",
+    "description": "Add songs to playlists with a single click!",
+    "manifest_version": 2,
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "permissions": [
+        "*://*.google.com/*",
+        "storage",
+        "*://*.spotify.com/*"
+    ],
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/img_16.png",
+            "24":"images/img_24.png",
+            "32": "images/img_32.png",
+            "64": "images/img_64.png",
+            "128": "images/img_128.png"
+        }
+    },
+    "web_accessible_resources": [
+        "/oauth2/*"
+    ],
+    "commands": {
+        "add_current_song": {
+            "suggested_key": {
+                "windows": "Ctrl+Shift+X",
+                "mac": "Command+Shift+X",
+                "chromeos": "Ctrl+Shift+X",
+                "linux": "Ctrl+Shift+X"
+            },
+            "description": "Add current song to targeted playlist."
+        }
+    },
+    "key": "REDACTED"
+  }
