@@ -2,6 +2,7 @@ let add_song = document.getElementById('addSong');
 let skip = document.getElementById('skip');
 var playlists = document.getElementById('playlistChoice');
 var targetName = document.getElementById('targetName');
+var logOut = document.getElementById('test');
 
 chrome.storage.local.get(['playlists'], function (playlist_array) {
     playlist_array.playlists.forEach(element => {
@@ -37,5 +38,11 @@ add_song.onclick = function addSong() {
             { message: 'addSong', id: response.target_playlist_id }
         )
     })
+}
+
+logOut.onclick = function logOut(){
+    chrome.runtime.sendMessage(
+        {message: 'test'}
+    )
 }
 

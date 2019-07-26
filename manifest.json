@@ -5,21 +5,22 @@
     "manifest_version": 2,
     "background": {
         "scripts": ["background.js"],
-        "persistent": false
+        "persistent": true
     },
     "permissions": [
+        "identity",
         "*://*.google.com/*",
         "storage",
         "*://*.spotify.com/*"
     ],
     "browser_action": {
-        "default_popup": "popup.html",
+        "default_popup": "popup_login.html",
         "default_icon": {
-            "16": "images/img_16.png",
-            "24":"images/img_24.png",
-            "32": "images/img_32.png",
-            "64": "images/img_64.png",
-            "128": "images/img_128.png"
+            "16": "images/spotify16.png",
+            "24":"images/spotify24.png",
+            "32": "images/spotify32.png",
+            "64": "images/spotify64.png",
+            "128": "images/spotify128.png"
         }
     },
     "web_accessible_resources": [

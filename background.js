@@ -1,17 +1,9 @@
-chrome.runtime.onInstalled.addListener(function () {
-  chrome.storage.local.set({ logged_in: false }, function (innerObj) { })
-  chrome.storage.local.set({ gotPlaylists: 0 }, function () { });
-  chrome.storage.local.set({target_playlist_name: "not chosen"}, function(){});
-  chrome.storage.local.set({target_playlist_id: "null"}, function () { });
-})
-
-chrome.storage.local.get(['logged_in'], function(data) {
-  if (data.logged_in) {
-    chrome.browserAction.setPopup({popup: 'popup.html'});
-  } else {
-    chrome.browserAction.setPopup({popup: 'popup_login.html'});
-  }
-});
+/*
+TODO:
+- Refresh login usage (more consistent logins)
+  - Leverage refresh token? Figure out how to do that.
+- Make HTML/CSS prettier
+*/
 
 var client_id = 'REDACTED';
 var client_secret = 'REDACTED';
@@ -20,6 +12,7 @@ var scope = 'user-modify-playback-state user-read-private user-read-email playli
 var authentication_url = 'https://accounts.spotify.com/authorize' + '?client_id=' + client_id + '&response_type=code' + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
 var authorization_token = 'Bearer ';
 
+//Functions
 function makeXhrPostRequest(code, grantType, refreshToken) {
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
@@ -64,6 +57,34 @@ function retrieveUserPlaylists() {
   })
 }
 
+function refreshToken() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(['refresh_token'], function (storageObj) {
+      let xhr = new XMLHttpRequest();
+      xhr.open('POST', 'http://accounts.spotify.com/api/token')
+      xhr.setRequestHeader("Authorization", "Basic " + btoa(client_id + ':' + client_secret))
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      var params = "grant_type=refresh_token&refresh_token=" + storageObj.refresh_token;
+      xhr.onload = function () {
+        console.log(storageObj.refresh_token);
+        console.log('REQUESTING REFRESH TOKEN');
+        console.log(xhr.response);
+        response = JSON.parse(xhr.response);
+        if (xhr.status == 200) {
+          console.log('SUCCESFULLY RETRIEVED NEW ACCESS TOKEN')
+          access_token = "Bearer " + response.access_token;
+          chrome.storage.local.set({refresh_token:storageObj.refresh_token}, function(){});
+          resolve("Success.");
+        } else {
+          console.log('FAILED TO RETRIEVE ACCESS TOKEN');
+          resolve(xhr.status);
+        }
+      }
+      xhr.send(params);
+    })
+  })
+}
+
 function populatePlaylistArray() {
   //begin populating playlist array
   return new Promise(resolve => {
@@ -77,7 +98,7 @@ function populatePlaylistArray() {
             console.log('retrieved information.')
           });
         })
-  
+
         chrome.storage.local.get(['playlists'], function (response) {
           console.log("stored array: " + response)
         })
@@ -92,6 +113,7 @@ function retrieveCurrentlyPlayedSong() {
     xhr.open('GET', "https://api.spotify.com/v1/me/player/currently-playing", true);
     xhr.setRequestHeader("Authorization", authorization_token);
     xhr.onload = function () {
+      console.log(xhr.response);
       var currently_listening = JSON.parse(xhr.response);
       var song_details = currently_listening.item;
       var uri = song_details.uri;
@@ -111,13 +133,49 @@ async function addSongToPlaylist(targetID) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', "https://api.spotify.com/v1/playlists/" + targetID + "/tracks?" + song);
     xhr.setRequestHeader("Authorization", authorization_token);
-    xhr.onload = function () {
+    xhr.onload = async function () {
       console.log(xhr.response);
+      if(xhr.status != 200){
+        await refreshToken();
+        await addSongToPlaylist(targetID);
+      }
     }
     xhr.send();
     resolve('Successfully sent.');
   })
 }
+
+chrome.runtime.onInstalled.addListener(function () {
+  chrome.storage.local.set({ logged_in: false }, function () { });
+  chrome.storage.local.set({ gotPlaylists: 0 }, function () { });
+  chrome.storage.local.set({ target_playlist_name: "not chosen" }, function () { });
+  chrome.storage.local.set({ target_playlist_id: "null" }, function () { });
+  chrome.storage.local.set({ refresh_token: "" }, function () { });
+})
+
+chrome.runtime.onStartup.addListener(async function () {
+  console.log('STARTING UP')
+  chrome.storage.local.get(['logged_in'], async function(storageObj){
+    if(storageObj.logged_in){
+      var status = await refreshToken();
+      if (status == "Success") {
+        chrome.storage.local.set({ logged_in: true }, function () { })
+        chrome.browserAction.setPopup({ popup: 'popup.html' });
+      } else {
+        console.log("ERROR CODE: " + status);
+        chrome.storage.local.set({ logged_in: false }, function () { });
+        chrome.browserAction.setPopup({ popup: 'popup_login.html' });
+        chrome.storage.local.set({ playlists: [] }, function () { });
+        chrome.storage.local.set({ gotPlaylists: 0 }, function () { });
+        chrome.storage.local.set({ target_playlist_name: "not chosen" }, function () { });
+        chrome.storage.local.set({ target_playlist_id: "null" }, function () { });
+        chrome.storage.local.set({ refresh_token: "" }, function () { });
+      }
+    } else {
+      chrome.browserAction.setPopup({popup: 'popup_login.html'});
+    }
+  })
+})
 
 chrome.runtime.onMessage.addListener(
   async function (request, sender, sendResponse) {
@@ -133,21 +191,23 @@ chrome.runtime.onMessage.addListener(
           var response_text = await makeXhrPostRequest(code, 'authorization_code')
           response_text = JSON.parse(response_text);
           authorization_token += response_text.access_token;
-          console.log(authorization_token);
-          chrome.storage.local.set({logged_in: true}, function(){});
-          chrome.browserAction.setPopup({popup: 'popup.html'});
+          chrome.storage.local.set({ refresh_token: response_text.refresh_token }, function () { });
+          chrome.storage.local.set({ logged_in: true }, function () { });
+          chrome.browserAction.setPopup({ popup: 'popup.html' });
           await populatePlaylistArray();
         }
       )
     } else if (request.message == 'addSong') {
       await addSongToPlaylist(request.id);
+    } else if (request.message == 'test') {
+      await refreshToken();
     }
   }
 )
 
-chrome.commands.onCommand.addListener(async function(command){
-  if(command == "add_current_song"){
-    chrome.storage.local.get(['target_playlist_id'], async function(response){
+chrome.commands.onCommand.addListener(async function (command) {
+  if (command == "add_current_song") {
+    chrome.storage.local.get(['target_playlist_id'], async function (response) {
       await addSongToPlaylist(response.target_playlist_id);
     })
   }
