@@ -1,8 +1,10 @@
 let add_song = document.getElementById('addSong');
 let skip = document.getElementById('skip');
+let play = document.getElementById('play');
+let pause = document.getElementById('pause');
 var playlists = document.getElementById('playlistChoice');
 var targetName = document.getElementById('targetName');
-var logOut = document.getElementById('test');
+var playbackControl = document.getElementById('playPause');
 
 chrome.storage.local.get(['playlists'], function (playlist_array) {
     playlist_array.playlists.forEach(element => {
@@ -40,9 +42,14 @@ add_song.onclick = function addSong() {
     })
 }
 
-logOut.onclick = function logOut(){
+skip.onclick = function skipSong(){
     chrome.runtime.sendMessage(
-        {message: 'test'}
+        {message: 'skip'}
     )
 }
 
+playbackControl.onclick = function playback() {
+    chrome.runtime.sendMessage(
+        {message: 'playPause'}
+    )
+}

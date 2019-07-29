@@ -11,7 +11,9 @@
         "identity",
         "*://*.google.com/*",
         "storage",
-        "*://*.spotify.com/*"
+        "*://*.spotify.com/*",
+        "alarms",
+        "idle"
     ],
     "browser_action": {
         "default_popup": "popup_login.html",
@@ -29,12 +31,30 @@
     "commands": {
         "add_current_song": {
             "suggested_key": {
-                "windows": "Ctrl+Shift+X",
-                "mac": "Command+Shift+X",
-                "chromeos": "Ctrl+Shift+X",
-                "linux": "Ctrl+Shift+X"
+                "windows": "Alt+Shift+X",
+                "mac": "Alt+Shift+X",
+                "chromeos": "Alt+Shift+X",
+                "linux": "Alt+Shift+X"
             },
             "description": "Add current song to targeted playlist."
+        },
+        "skip_song": {
+            "suggested_key": {
+                "windows": "Alt+Shift+C",
+                "mac": "Alt+Shift+C",
+                "chromeos": "Alt+Shift+C",
+                "linux": "Alt+Shift+C"
+            },
+            "description": "Skip song."
+        },
+        "play_pause": {
+            "suggested_key": {
+                "windows": "Alt+Shift+P",
+                "mac": "Alt+Shift+P",
+                "chromeos": "Alt+Shift+P",
+                "linux": "Alt+Shift+P"
+            },
+            "description": "Play or pause a song."
         }
     },
     "key": "REDACTED"
