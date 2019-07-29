@@ -26,7 +26,7 @@ After logging in, the extension is ready to be used.
 Choose a playlist from the dropdown menu - you will see all your **public playlists**. The ability to add to private and collaborative playlists will come later.  
 ![Playlist choice](/images/markdown_images/options.png)
 
-The extension will remember your target choice, and whenever trigger the "add song" shortcut or button it will add your currently played song to this playlist.
+The extension will remember your target choice, and whenever trigger the "add song" shortcut or button it will add your currently played song to this playlist.  
 ![Re-select playlist](/images/markdown_images/chosen_playlist.png)
 
 You may change the target playlist by selecting another option from the options page.  
