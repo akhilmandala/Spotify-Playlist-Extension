@@ -16,9 +16,9 @@ Safeguards:
   - Duplicate songs
 */
 
-var client_id = 'REDACTED';
-var client_secret = 'REDACTED';
-var redirect_uri = 'REDACTED';
+var client_id = "REDACTED";
+var client_secret = "REDACTED";
+var redirect_uri = "REDACTED";
 var scope = 'user-modify-playback-state user-read-private user-read-email playlist-modify-public playlist-modify-private user-read-currently-playing user-read-playback-state';
 var authentication_url = 'https://accounts.spotify.com/authorize' + '?client_id=' + client_id + '&response_type=code' + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
 var authorization_token = 'Bearer ';
