@@ -8,10 +8,11 @@ Safeguards:
 */
 
 var authorization_token = 'Bearer ';
-var real_url = "https://us-central1-spotify-playlist-extension.cloudfunctions.net/authentication/login";
-var test_url = "http://localhost:8888/"
+var real_url = "REDACTED";
+var test_url = "REDACTED"
 
 //Functions
+
 //Resets the extension.
 function initializeBaseState() {
   chrome.storage.local.set({ logged_in: false }, function () { });
