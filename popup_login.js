@@ -4,4 +4,6 @@ login.onclick = async function handler() {
     chrome.runtime.sendMessage(
         { message: 'launchOauth' }
     )
+
+    login.setAttribute('disabled', true)
 }

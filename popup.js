@@ -5,6 +5,8 @@ let pause = document.getElementById('pause');
 var playlists = document.getElementById('playlistChoice');
 var targetName = document.getElementById('targetName');
 var playbackControl = document.getElementById('playPause');
+var restart = document.getElementById('restart');
+var previous = document.getElementById('previous');
 
 chrome.storage.local.get(['playlists'], function (playlist_array) {
     playlist_array.playlists.forEach(element => {
@@ -51,5 +53,17 @@ skip.onclick = function skipSong(){
 playbackControl.onclick = function playback() {
     chrome.runtime.sendMessage(
         {message: 'playPause'}
+    )
+}
+
+restart.onclick = function restart() {
+    chrome.runtime.sendMessage(
+        {message: 'restart'}
+    )
+}
+
+previous.onclick = function previous() {
+    chrome.runtime.sendMessage(
+        {message: 'previous'}
     )
 }

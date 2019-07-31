@@ -1,6 +1,6 @@
 {
     "name": "Spotify Playlist Tool",
-    "version": "1.0",
+    "version": "1.5",
     "description": "Add songs to playlists with a single click!",
     "manifest_version": 2,
     "background": {
@@ -13,8 +13,17 @@
         "storage",
         "*://*.spotify.com/*",
         "alarms",
-        "idle"
+        "idle",
+        "notifications",
+        "https://i.scdn.co/*",
+        "https://us-central1-spotify-playlist-extension.cloudfunctions.net/*",
+        "http://localhost:8888/*"
     ],
+    "icons": {
+        "16": "images/spotify16.png",
+        "48": "images/spotify64.png",
+        "128": "images/spotify128.png"
+    },
     "browser_action": {
         "default_popup": "popup_login.html",
         "default_icon": {
@@ -40,12 +49,21 @@
         },
         "skip_song": {
             "suggested_key": {
-                "windows": "Alt+Shift+C",
-                "mac": "Alt+Shift+C",
-                "chromeos": "Alt+Shift+C",
-                "linux": "Alt+Shift+C"
+                "windows": "Alt+Shift+S",
+                "mac": "Alt+Shift+S",
+                "chromeos": "Alt+Shift+S",
+                "linux": "Alt+Shift+S"
             },
             "description": "Skip song."
+        },
+        "restart": {
+            "suggested_key": {
+                "windows": "Alt+Shift+D",
+                "mac": "Alt+Shift+D",
+                "chromeos": "Alt+Shift+D",
+                "linux": "Alt+Shift+D"
+            },
+            "description": "Restart the current song"
         },
         "play_pause": {
             "suggested_key": {

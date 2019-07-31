@@ -8,9 +8,12 @@ This extension will work with **ANY** playback source - if you are listening fro
 ## Shortcuts
 - Play/Pause: Alt-Shift-P
 - Skip song: Alt-Shift-C
+- Restart song: Alt-Shift-D
 - Add current song to target playlist: Alt-Shift-X
 
 ## Set-up and usage guide
+NOTE: Some of these images may be outdated as new functions are added. However, The basic flow of this guide is still the same. 
+
 When installed, a small icon should appear in the **Chrome toolbar**.  
 ![Toolbar image](/images/markdown_images/toolbar.png)
 
