@@ -3,7 +3,7 @@
 ## Description
 Curating playlists can be difficult - if you are multitasking and you find that you like the current song, you have to tab out of whatever it is you're doing and manually add the song to a chosen playlist. This extension mitigates that annoyance by bringing playback control *AND* playlist modification directly to your keyboard and browser. Use keyboard shortcuts to play/pause, skip songs, and add your currently played song to a chosen target playlist.
 
-This extension will work with **ANY** playback source - if you are listening from your phone, laptop, TV, etc. the extension will allow you to easily control playback and modify playlists.
+The extension communicates directly with Spotify through its API to retrieve and change data. Authentication is done through a proxy server hosted on Google Cloud using NodeJS and ExpressJS for security pursposes. This extension will work with **ANY** playback source - if you are listening from your phone, laptop, TV, etc. the extension will allow you to easily control playback and modify playlists.
 
 ## Shortcuts
 - Play/Pause: Alt-Shift-P

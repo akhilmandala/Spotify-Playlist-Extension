@@ -1,0 +1,25 @@
+body {
+    background-color: #303030
+}
+
+p {
+    color: white;
+
+}
+
+a {
+    color: lightblue;
+}
+
+#playback.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+#playback button {
+    background-color: #84bd00;
+    color: white;
+    border-radius: 12px;
+    float: left;
+}

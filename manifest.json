@@ -56,14 +56,14 @@
             },
             "description": "Skip song."
         },
-        "restart": {
+        "current_song": {
             "suggested_key": {
                 "windows": "Alt+Shift+D",
                 "mac": "Alt+Shift+D",
                 "chromeos": "Alt+Shift+D",
                 "linux": "Alt+Shift+D"
             },
-            "description": "Restart the current song"
+            "description": "Sends a banner with information about the current song."
         },
         "play_pause": {
             "suggested_key": {

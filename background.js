@@ -9,7 +9,6 @@ Safeguards:
 
 var authorization_token = 'Bearer ';
 var real_url = "REDACTED";
-var test_url = "REDACTED"
 
 //Functions
 
@@ -27,7 +26,7 @@ function initializeBaseState() {
 
 function retrieveAuthorizationFromServer() {
   return new Promise(resolve => {
-    chrome.identity.launchWebAuthFlow({ url: test_url + 'login', interactive: true }, function (redirectUrl) {
+    chrome.identity.launchWebAuthFlow({ url: real_url + 'login', interactive: true }, function (redirectUrl) {
       var params = new URLSearchParams(redirectUrl);
       chrome.storage.local.set({refresh_token: params.get('refresh')}, function(){});
       authorization_token = "Bearer " + params.get('authorization');
@@ -42,7 +41,7 @@ function refreshToken() {
     console.log("OLD TOKEN: " + authorization_token);
     chrome.storage.local.get(['refresh_token'], function (storageObj) {
       let xhr = new XMLHttpRequest();
-      xhr.open('GET', test_url + 'refresh?refresh=' + storageObj.refresh_token)
+      xhr.open('GET', real_url + 'refresh?refresh=' + storageObj.refresh_token)
       xhr.onload = function () {
         console.log('REQUESTING REFRESH TOKEN');
         response = JSON.parse(xhr.response);
@@ -504,11 +503,11 @@ chrome.commands.onCommand.addListener(async function (command) {
         await playPause();
       }
     });
-  } else if (command == 'restart') {
-    await restartSong().then(async function (result) {
+  } else if (command == 'current_song') {
+    await sendBannerToUser().then(async function (result) {
       if (result == 401 || result == 400) {
         await refreshToken();
-        await restartSong();
+        await sendBannerToUser();
       }
     });
   }
