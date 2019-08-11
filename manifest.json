@@ -1,7 +1,7 @@
 {
-    "name": "Spotify Remote for Chrome",
+    "name": "Spotify Playlist Tool",
     "version": "1.5",
-    "description": "Add songs to playlists and control playback with a single click!",
+    "description": "Add songs to playlists with a single click!",
     "manifest_version": 2,
     "background": {
         "scripts": ["background.js"],
@@ -9,13 +9,15 @@
     },
     "permissions": [
         "identity",
+        "*://*.google.com/*",
         "storage",
         "*://*.spotify.com/*",
         "alarms",
         "idle",
         "notifications",
         "https://i.scdn.co/*",
-        "REDACTED"
+        "https://us-central1-spotify-playlist-extension.cloudfunctions.net/*",
+        "http://localhost:8888/*"
     ],
     "icons": {
         "16": "images/spotify16.png",
