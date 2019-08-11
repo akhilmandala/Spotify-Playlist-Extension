@@ -433,42 +433,67 @@ chrome.runtime.onMessage.addListener(
           console.log("EXECUTING FIX")
           await refreshToken();
           //Needs to be called twice in order to work on the first time when emergency-refreshing a token.
-          await addSongToPlaylist();
-          await addSongToPlaylist();
+          await addSongToPlaylist(request.id);
+          await addSongToPlaylist(request.id).then(async function(result) {
+            //If the refresh token fix doesn't work, then the refresh token is probably deprecated - need to re-initialize the whole app
+            if(result == 401) {
+              await initializeBaseState();
+            }
+          });
         }
       });
     } else if (request.message == 'skip') {
       await skipSong().then(async function (result) {
         if (result == 401 || result == 400) {
           await refreshToken();
-          await skipSong();
+          await skipSong().then(async function(result) {
+            if(result == 401) {
+              await initializeBaseState();
+            }
+          });;
         }
       });
     } else if (request.message == 'playPause') {
       await playPause().then(async function (result) {
         if (result == 401 || result == 400) {
           await refreshToken();
-          await playPause();
+          await playPause().then(async function(result) {
+            if(result == 401) {
+              await initializeBaseState();
+            }
+          });;;
         }
       });
     } else if (request.message == 'previous') {
       await previousSong().then(async function (result) {
         if (result == 401 || result == 400) {
           await refreshToken();
-          await previousSong();
+          await previousSong().then(async function(result) {
+            if(result == 401) {
+              await initializeBaseState();
+            }
+          });;;
         }
       });
     } else if (request.message == 'restart') {
       await restartSong().then(async function (result) {
         if (result == 401 || result == 400) {
           await refreshToken();
-          await restartSong();
+          await restartSong().then(async function(result) {
+            if(result == 401) {
+              await initializeBaseState();
+            }
+          });;;
         }
       });
     } else if (request.message == 'invalidate') {
       await sendBannerToUser();
     } else if (request.message == 'refresh') {
-      await refreshToken();
+      await refreshToken().then(async function(result) {
+        if(result == 401) {
+          await initializeBaseState();
+        }
+      });;;
     }
   }
 )
@@ -485,7 +510,11 @@ chrome.commands.onCommand.addListener(async function (command) {
       await addSongToPlaylist(response.target_playlist_id).then(async function (result) {
         if (result == 401 || result == 400) {
           refreshToken();
-          addSongToPlaylist();
+          addSongToPlaylist().then(async function(result) {
+            if(result == 401) {
+              await initializeBaseState();
+            }
+          });;;
         }
       });
     })
@@ -493,21 +522,33 @@ chrome.commands.onCommand.addListener(async function (command) {
     await skipSong().then(async function (result) {
       if (result == 401 || result == 400) {
         await refreshToken();
-        await skipSong();
+        await skipSong().then(async function(result) {
+          if(result == 401) {
+            await initializeBaseState();
+          }
+        });;;
       }
     });
   } else if (command == 'play_pause') {
     await playPause().then(async function (result) {
       if (result == 401 || result == 400) {
         await refreshToken();
-        await playPause();
+        await playPause().then(async function(result) {
+          if(result == 401) {
+            await initializeBaseState();
+          }
+        });;;
       }
     });
   } else if (command == 'current_song') {
     await sendBannerToUser().then(async function (result) {
       if (result == 401 || result == 400) {
         await refreshToken();
-        await sendBannerToUser();
+        await sendBannerToUser().then(async function(result) {
+          if(result == 401) {
+            await initializeBaseState();
+          }
+        });;;
       }
     });
   }
